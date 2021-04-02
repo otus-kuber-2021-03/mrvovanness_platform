@@ -5,6 +5,19 @@ metadata:
   labels:
     app: web
 spec:
+  volumes:
+    - name: app
+      emptyDir: {}
+  initContainers:
+    - name: index-html-generator
+      image: docker.io/library/busybox:1.33.0
+      command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+      volumeMounts:
+        - name: app
+          mountPath: /app
   containers:
     - name: web
-      image: docker.io/mrvovanness/kubernetes-intro-web:1
+      image: docker.io/mrvovanness/kubernetes-intro-web:2
+      volumeMounts:
+        - name: app
+          mountPath: /app
